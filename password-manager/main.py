@@ -1,7 +1,27 @@
+import json
 import pyperclip
 from tkinter import *
 from tkinter import messagebox
 from random import choice,shuffle,randint
+
+#SEARCH FOR WEBSITE AND FIND PASSWORD
+def search():
+    website = first_entry.get()
+
+    try:
+        with open("data.json", "r") as file:
+            data = json.load(file)
+    except FileNotFoundError:
+            messagebox.showerror(title="Error", message="No Data File Found.")
+    else:
+        if website in data:
+            email = data[website]["email"]
+            password = data[website]["password"]
+            messagebox.showinfo(title=website, message=f"Email: {email}\n Password: {password}")
+        else:
+            messagebox.showerror(title="Error", message="No Data File Found.")
+
+
 
 #PASSWORD GENERATOR
 def generatePassword():
@@ -28,6 +48,13 @@ def save():
     email_entry = second_entry.get()
     pass_entry = third_entry.get()
 
+    new_data = {
+        web_entry:
+        {
+        "email":email_entry,
+        "password":pass_entry
+    }
+}
 
     if len(web_entry) == 0 or len(email_entry) == 0 or len(pass_entry) == 0:
         messagebox.showerror("Error", "Please make sure you don't let any fields empty")
@@ -38,12 +65,23 @@ def save():
                                                                   f"\n Is it ok to save?")
 
         if is_okay:
-            with open("data.txt", "a") as file:
-                formatted_data = f"{web_entry} | {email_entry} | {pass_entry}\n"
-                file.write(formatted_data)
+            try:
+                with open("data.json", "r") as file:
+                    data = json.load(file)  #Reading old data
 
-            first_entry.delete(0, END)
-            third_entry.delete(0, END)
+            except FileNotFoundError:
+                with open("data.json", "w") as file:
+                    json.dump(new_data, file, indent=4)
+
+            else:
+                data.update(new_data)  # Updating old data
+
+                with open("data.json", "w") as file:
+                    json.dump(data, file,indent=4)   #Saving updated data
+
+            finally:
+                first_entry.delete(0, END)
+                third_entry.delete(0, END)
 
 
 
@@ -58,6 +96,7 @@ mypass_image = PhotoImage(file="logo.png")
 canvas.create_image(100, 100, image=mypass_image)
 canvas.grid(column=1, row=0,columnspan=2)
 
+#Labels
 website_label = Label(text="Website:")
 website_label.grid(column=0, row=1)
 
@@ -67,8 +106,9 @@ website_email.grid(column=0, row=2)
 website_password = Label(text="Password:")
 website_password.grid(column=0, row=3)
 
-first_entry = Entry(width=35)
-first_entry.grid(column=1, row=1, columnspan=2,sticky="EW")
+#Entries
+first_entry = Entry(width=21)
+first_entry.grid(column=1, row=1,sticky="W")
 first_entry.focus()
 
 second_entry = Entry(width=35)
@@ -80,7 +120,11 @@ third_entry = Entry(width=21)
 third_entry.grid(column=1, row=3,sticky="W")
 third_entry.focus()
 
-generatePass_button = Button(text="Generate password",command=generatePassword)
+#Buttons
+search_button = Button(text="Search",width=15,command=search)
+search_button.grid(column=2, row=1,sticky="E")
+
+generatePass_button = Button(text="Generate password",width=15,command=generatePassword)
 generatePass_button.grid(column=2, row=3,sticky="E")
 
 add_button = Button(text="Add",width=36,command=save)
