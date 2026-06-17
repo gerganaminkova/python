@@ -11,7 +11,7 @@ An automated Python application that monitors live flight prices for your favori
 * **Smart Request Caching:** Utilizes `requests_cache` to cache flight search results, saving API credits and accelerating execution.
 * **Robust Error Handling:** Built-in protection against missing flight data (`N/A` handling) to prevent application crashes.
 * **Instant SMS Notifications:** Fully integrated with the Twilio API to send text alerts the moment a flight deal is found.
-
+* **Automated Email Club Alerts:** Integrated with `smtplib` to email all retrieved customers simultaneously when a budget-friendly flight is located.
 ---
 
 ##  Third-Party APIs Used
@@ -20,7 +20,7 @@ This project relies on the following external services:
 * **Google Sheet Data Management:** [Sheety API](https://sheety.co/)
 * **Flight Data Search:** [SerpAPI Google Flights API](https://serpapi.com/google-flights-api)
 * **SMS Delivery Service:** [Twilio Messaging API](https://www.twilio.com/docs/messaging/quickstart/python)
-
+* **Email Delivery Service:** Gmail SMTP Server (`smtp.gmail.com`)
 ---
 
 ##  Tech Stack & Imports

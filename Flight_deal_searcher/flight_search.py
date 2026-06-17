@@ -8,7 +8,8 @@ class FlightSearch:
         self.API_KEY = os.getenv("SERP_API_KEY")
         self.endpoint = "https://serpapi.com/search"
 
-    def check_flight(self,departure_id,arrival_id,outbound_date,return_date):
+
+    def check_flight(self,departure_id,arrival_id,outbound_date,return_date,is_direct=True):
         flight_params = {
             "engine": "google_flights",
             "departure_id": departure_id,
@@ -17,9 +18,11 @@ class FlightSearch:
             "return_date": return_date,
             "currency": "EUR",
             "hl": "en",
-            "api_key": os.getenv("SERP_API_KEY")
-
+            "api_key": self.API_KEY
         }
+        if is_direct:
+            flight_params["stops"] = "1"
+
         response = requests.get(self.endpoint, params=flight_params)
 
         flight_info = response.json()
